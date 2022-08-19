@@ -1,94 +1,40 @@
-import ProfileCard from './components/ProfileCard';
+import React from 'react'
+import ProfileCard from './components/ProfileCard'
+import ProfileForm  from './components/ProfileForm'
 
-import React, { Component } from 'react'
+function App() {
 
-class App extends Component {
-  constructor() {
-    super();
-
-    this.handleClick=this.handleClick.bind(this)
-
-this.state={
-  writers:{
-    loading:false,
-    list:[]
-  }
-};
- }
-
-handleClick() {
-  this.setState({
-    writers:{
-      loading: true
+  const [allprofiles, setAllprofiles] = React.useState([
+  {
+    firstname: "Ali",
+      lastname: "Subur",
+      email: "alimohammedsubur@gmail.com",
+        phone: "0549341667"
     }
-  });
-   setTimeout(async()=>{
-     let resp = await fetch ("/writers.json");
-     let result = await resp.json();
+  ])
+  
+  const updateallprofiles = (profile) => {
+    let arr = allprofiles;
+    arr.push(profile)
+    setAllprofiles([...arr])
+  };
 
-     this.setState({
-      writers:{
-        loading:false,
-        list:result
-      }
 
-     });
-   },
-      3500);
-  }
-   
-   render() {
-const{
+  return (
+    <>
+    <div className="app">
+  <h1>our profile maker</h1>
+    </div>
+    <ProfileForm submit={updateallprofiles} />
+      <hr />
+      <div className='list'>
+        {allprofiles.map((person, index) => (
+          <ProfileCard key={index} card={person} /> 
+        ))}
 
-  writers:{loading, list}
-}=this.state;
-
-if(loading) {
-
-  return(
-
-<div>
-<h1>Writers Profile</h1>
-<div className='container'>
-<div className='card action'>
-<p className='infoText'>loading...</p>
-
-</div>
-
-</div>
-
-</div>
-
-  );
+      </div>
+    </>
+  )
 }
 
- 
-return (
-      <div>
-      <h1>Writers Profile</h1>
-      <div className='container'>
-      {list.length === 0 ? (
-
-       <div className= "card action">
-       <p className='infoText'> Oops...no writer profile found</p>
-       <button className='actionBtn' onClick={this.handleClick}>Get Writers</button>
-
-      
-      
-      </div>
-      ):(
-
-      list.map((writer)=>(
-     <ProfileCard key= {writer.id} writer={writer}/>
-      ))
-
-     ) },
-
-     </div>
-      </div>
-    );
-    }
-   }
-
-
-export default App;
+export default App
